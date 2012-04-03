@@ -111,7 +111,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 
         $bs = new Selector($jsonStub);
 
-        $this->assertEquals(array('Willian'), $bs->getAll('name'));
+        $this->assertEquals(array('Willian'), $bs('[name]'));
         $this->assertEquals('Willian', $bs->getOne('name'));
     }
 
@@ -120,7 +120,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 
         $bs = new Selector($jsonStub);
 
-        $this->assertEquals(array(), $bs->getAll('name' ));
+        $this->assertEquals(array(), $bs('[name]' ));
         $this->assertEquals('', $bs->getOne('name' ));
     }
 
@@ -131,7 +131,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $jsonStub->person->name = null;
 
         $bs = new Selector($jsonStub);
-        $all = $bs->getAll('person.name', $defaultStub );
+        $all = $bs('[person.name]', $defaultStub );
         $one = $bs->getOne('person.name', $defaultStub );
 
         $this->assertEquals($defaultStub, $all);
@@ -143,7 +143,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $defaultStub = "default stub";
 
         $bs = new Selector($jsonStub);
-        $all = $bs->getAll('name', $defaultStub );
+        $all = $bs('[name]', $defaultStub );
         $one = $bs->getOne('name', $defaultStub );
 
         $this->assertEquals($defaultStub, $all);
@@ -154,7 +154,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $jsonStub = null;
 
         $bs = new Selector($jsonStub);
-        $all = $bs->getAll('name' );
+        $all = $bs('[name]' );
         $one = $bs->getOne('name' );
 
         $this->assertEquals(array(), $all);
@@ -166,7 +166,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $defaultStub = "default stub";
 
         $bs = new Selector($jsonStub);
-        $all = $bs->getAll('name', $defaultStub );
+        $all = $bs('[name]', $defaultStub );
         $one = $bs->getOne('name', $defaultStub );
 
         $this->assertEquals($defaultStub, $all);
@@ -195,7 +195,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 
         $bs = new Selector($jsonStub);
         $carColor = $bs->getOne('person.car.color' );
-        $allCarColors = $bs->getAll('person.car.color' );
+        $allCarColors = $bs('[person.car.color]' );
 
         $this->assertEquals(null, $carColor);
         $this->assertEquals(array(), $allCarColors);
@@ -210,7 +210,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 
         $bs = new Selector($jsonStub);
         $carColor = $bs->getOne('person.car.color', $defaultStub );
-        $allCarColors = $bs->getAll('person.car.color', $defaultStub );
+        $allCarColors = $bs('[person.car.color]', $defaultStub );
 
         $this->assertEquals($defaultStub, $carColor);
         $this->assertEquals($defaultStub, $allCarColors);
@@ -225,7 +225,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 
         $bs = new Selector($jsonStub);
         $car_color = $bs->getOne('person.car.color');
-        $car_colors = $bs->getAll('person.car.color');
+        $car_colors = $bs('[person.car.color]');
 
         $this->assertEquals('red', $car_color);
         $this->assertEquals( array('red','yellow'), $car_colors);
@@ -242,7 +242,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 
         $bs = new Selector($jsonStub);
         $car_color = $bs->getOne('person.car.color' );
-        $car_colors = $bs->getAll('person.car.color' );
+        $car_colors = $bs('[person.car.color]' );
 
         $expected_all = array('red','yellow');
         $expected_one = 'red';
@@ -258,7 +258,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 
         $bs = new Selector($jsonStub);
         $car_color = $bs->getOne('person.car.color' );
-        $car_colors = $bs->getAll('person.car.color' );
+        $car_colors = $bs('[person.car.color]' );
 
         $this->assertEquals( null, $car_color);
         $this->assertEquals( array(), $car_colors);
@@ -272,7 +272,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 
         $bs = new Selector($jsonStub);
         $car_color = $bs->getOne('person.car.color', $defaultStub );
-        $car_colors = $bs->getAll('person.car.color', $defaultStub );
+        $car_colors = $bs('[person.car.color]', $defaultStub );
 
         $this->assertEquals( $defaultStub, $car_color);
         $this->assertEquals( $defaultStub, $car_colors);

@@ -36,6 +36,7 @@ class Selector {
         $posFirstChar = 0;
         $posLastChar = strlen($path) - 1;
         if (strpos($path, '[') === $posFirstChar && strpos($path, ']') === $posLastChar) {
+            $default = $default === '' ? array() : $default;
             return $this->getAll(substr($path, $posFirstChar + 1, $posLastChar - 1), $default);
         } else if (strpos($path, '{') === $posFirstChar && strpos($path, '}') === $posLastChar) {
             $path = substr($path, $posFirstChar + 1, $posLastChar - 1); // remove brackets
@@ -52,7 +53,7 @@ class Selector {
         return $result;
     }
 
-    public function getAll($path, $default=array()) {
+    protected function getAll($path, $default=array()) {
         // Strip off multiple spaces
         $path = preg_replace('/\s+/', '', $path);
 
@@ -136,7 +137,7 @@ class Selector {
 
         $foundObjects = array_filter($contextObjects, function($item) use ($fieldPath, $value){
             $contextParser = new Selector($item);
-            $foundValues = $contextParser->getAll( $fieldPath );
+            $foundValues = $contextParser("[ {$fieldPath} ]");
             return in_array($value, $foundValues);
         });
 
