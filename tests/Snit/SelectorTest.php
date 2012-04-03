@@ -4,6 +4,66 @@ require 'src/Snit/Selector.php';
 use Snit\Selector;
 
 class SelectorTest extends PHPUnit_Framework_TestCase {
+    function getDataInJsonString() {
+        $json = '{
+            "school": {
+              "name": "Boston High School",
+              "staff": {
+                "teachers": [
+                  {
+                    "id": 1,
+                    "name": "Luiz Honda",
+                    "children": [
+                      {
+                        "id": 6,
+                        "name": "Alex"
+                      }
+                    ]
+                  },
+                  {
+                    "id": 3,
+                    "name": "Willian Watanabe",
+                    "visibility": "private"
+                  },
+                  {
+                    "id": 2,
+                    "name": "Rafael Martins",
+                    "children": [
+                      {
+                        "id": 4,
+                        "name": "Gabriel"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+        }';
+
+        return $json;
+    }
+
+    function getDataInStdClass() {
+        return json_decode($this->getDataInJsonString());
+    }
+
+    function getDataInArray() {
+        return json_decode($this->getDataInJsonString(), true);
+    }
+
+    function test_get_dictionary_for_documentation() {
+        $data = $this->getDataInStdClass();
+        $selector = new Selector($data);
+
+        $expected = array(
+            '1' => 'Luiz Honda',
+            '3' => 'Willian Watanabe',
+            '2' => 'Rafael Martins'
+        );
+        $result = $selector('{ school.staff.teachers.id : school.staff.teachers.name }');
+        $this->assertEquals($expected, $result);
+    }
+
     function test_get_attribute_simple_happy_path(){
         $jsonStub = new StdClass();
         $jsonStub->name = 'Willian';
