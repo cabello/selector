@@ -47,7 +47,7 @@ class Selector {
         return $this->getOne($path, $default);
     }
 
-    public function getOne($path, $default=''){
+    protected function getOne($path, $default=''){
         $results = $this->getAll($path);
         $result = isset($results[0]) ? $results[0] : $default;
         return $result;
