@@ -64,6 +64,16 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $result);
     }
 
+    function test_get_list_for_documentation() {
+        $data = $this->getDataInStdClass();
+        $selector = new Selector($data);
+
+        $expected = array(1,3,2);
+        $result = $selector('[ school.staff.teachers.id ]');
+        $this->assertEquals($expected, $result);
+
+    }
+
     function test_get_attribute_simple_happy_path(){
         $jsonStub = new StdClass();
         $jsonStub->name = 'Willian';
