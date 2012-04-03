@@ -71,7 +71,15 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $expected = array(1,3,2);
         $result = $selector('[ school.staff.teachers.id ]');
         $this->assertEquals($expected, $result);
+    }
 
+    function test_get_one_for_documentation() {
+        $data = $this->getDataInStdClass();
+        $selector = new Selector($data);
+
+        $expected = 'Luiz Honda';
+        $result = $selector('school.staff.teachers.name');
+        $this->assertEquals($expected, $result);
     }
 
     function test_focus_for_documentation() {
