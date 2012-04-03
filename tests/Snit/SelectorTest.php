@@ -74,6 +74,20 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 
     }
 
+    function test_focus_for_documentation() {
+        $data = $this->getDataInStdClass();
+        $selector = new Selector($data);
+        $focusedSelector = $selector->focus('school.staff.teachers');
+
+        $expected = array(
+            '1' => 'Luiz Honda',
+            '3' => 'Willian Watanabe',
+            '2' => 'Rafael Martins'
+        );
+        $result = $focusedSelector('{ id : name }');
+        $this->assertEquals($expected, $result);
+    }
+
     function test_get_attribute_simple_happy_path(){
         $jsonStub = new StdClass();
         $jsonStub->name = 'Willian';
