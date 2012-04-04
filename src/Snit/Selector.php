@@ -81,9 +81,6 @@ class Selector {
     }
 
     protected function getAll($path, $default=array()) {
-        // Strip off multiple spaces
-        $path = preg_replace('/\s+/', '', $path);
-
         $orToken = '|';
         $possiblePaths = explode( $orToken, $path );
 
