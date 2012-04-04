@@ -47,6 +47,33 @@ class Selector {
         return $this->getOne($path, $default);
     }
 
+    public function findOne( $contextPath, $fieldPath, $value ){
+        $items = $this->findAll( $contextPath, $fieldPath, $value );
+        return array_shift($items);
+    }
+
+    public function findAll( $contextPath, $fieldPath, $value ){
+        $contextObjects = $this->getAll( $contextPath );
+
+        $foundObjects = array_filter($contextObjects, function($item) use ($fieldPath, $value){
+            $contextParser = new Selector($item);
+            $foundValues = $contextParser("[ {$fieldPath} ]");
+            return in_array($value, $foundValues);
+        });
+
+        return $foundObjects;
+    }
+
+    public function isList($data) {
+        if ( ! is_array($data)) {
+            return false;
+        }
+
+        $keys = array_keys($data);
+        $stringKeys = array_filter($keys, 'is_string');
+        return empty($stringKeys);
+    }
+
     protected function getOne($path, $default=''){
         $results = $this->getAll($path);
         $result = isset($results[0]) ? $results[0] : $default;
@@ -125,32 +152,5 @@ class Selector {
         }
 
         return array_combine( $keys, $values );
-    }
-
-    public function findOne( $contextPath, $fieldPath, $value ){
-        $items = $this->findAll( $contextPath, $fieldPath, $value );
-        return array_shift($items);
-    }
-
-    public function findAll( $contextPath, $fieldPath, $value ){
-        $contextObjects = $this->getAll( $contextPath );
-
-        $foundObjects = array_filter($contextObjects, function($item) use ($fieldPath, $value){
-            $contextParser = new Selector($item);
-            $foundValues = $contextParser("[ {$fieldPath} ]");
-            return in_array($value, $foundValues);
-        });
-
-        return $foundObjects;
-    }
-
-    public function isList($data) {
-        if ( ! is_array($data)) {
-            return false;
-        }
-
-        $keys = array_keys($data);
-        $stringKeys = array_filter($keys, 'is_string');
-        return empty($stringKeys);
     }
 }
