@@ -30,7 +30,7 @@ class Selector {
     }
 
     public function __invoke($path, $default='') {
-        $path = $this->cleanPath($path);
+        $path = $this->clearPath($path);
 
         switch ($this->askingFor($path)) {
             case 'list':
@@ -70,7 +70,7 @@ class Selector {
         return empty($stringKeys);
     }
 
-    protected function cleanPath($path) {
+    protected function clearPath($path) {
         // Strip off multiple spaces
         $path = preg_replace('/\s+/', '', $path);
 
