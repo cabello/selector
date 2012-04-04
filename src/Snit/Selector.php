@@ -30,21 +30,17 @@ class Selector {
     }
 
     public function __invoke($path, $default='') {
-        // Strip off multiple spaces
-        $path = preg_replace('/\s+/', '', $path);
+        $path = $this->cleanPath($path);
 
-        $posFirstChar = 0;
-        $posLastChar = strlen($path) - 1;
-        if (strpos($path, '[') === $posFirstChar && strpos($path, ']') === $posLastChar) {
-            $default = $default === '' ? array() : $default;
-            return $this->getAll(substr($path, $posFirstChar + 1, $posLastChar - 1), $default);
-        } else if (strpos($path, '{') === $posFirstChar && strpos($path, '}') === $posLastChar) {
-            $path = substr($path, $posFirstChar + 1, $posLastChar - 1); // remove brackets
-            list($keys, $values) = explode(':', $path);
-            return $this->getDictionary($keys, $values);
+        switch ($this->askingFor($path)) {
+            case 'list':
+                $default = $default === '' ? array() : $default;
+                return $this->getList($path, $default);
+            case 'dictionary':
+                return $this->getDictionaryFromPath($path);
+            default:
+                return $this->getOne($path, $default);
         }
-
-        return $this->getOne($path, $default);
     }
 
     public function findOne( $contextPath, $fieldPath, $value ){
@@ -72,6 +68,41 @@ class Selector {
         $keys = array_keys($data);
         $stringKeys = array_filter($keys, 'is_string');
         return empty($stringKeys);
+    }
+
+    protected function cleanPath($path) {
+        // Strip off multiple spaces
+        $path = preg_replace('/\s+/', '', $path);
+
+        return $path;
+    }
+
+    protected function askingFor($path) {
+        $posFirstChar = 0;
+        $posLastChar = strlen($path) - 1;
+
+        if (strpos($path, '[') === $posFirstChar && strpos($path, ']') === $posLastChar) {
+            return 'list';
+        } else if (strpos($path, '{') === $posFirstChar && strpos($path, '}') === $posLastChar) {
+            return 'dictionary';
+        }
+
+        return 'one';
+    }
+
+    protected function getList($path, $default) {
+        // Strip off[]
+        $path = preg_replace('/\[|\]/', '', $path);
+
+        return $this->getAll($path, $default);
+    }
+
+    protected function getDictionaryFromPath($path) {
+        // Strip off[]
+        $path = preg_replace('/\{|\}/', '', $path);
+
+        list($keys, $values) = explode(':', $path);
+        return $this->getDictionary($keys, $values);
     }
 
     protected function getOne($path, $default=''){
