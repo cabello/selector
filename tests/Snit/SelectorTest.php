@@ -281,12 +281,12 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
     /** @dataProvider provideDataForGetDictionary
     */
     function test_getDictionary( $json, $expected ){
-        $data = json_decode( $json );
+        $data = json_decode($json);
 
-        $parser = new Selector( $data );
-        $dictionary = $parser->getDictionary( 'some.keys', 'some.values' );
+        $parser = new Selector($data);
+        $dictionary = $parser('{ some.keys : some.values }');
 
-        $this->assertEquals( $expected, $dictionary );
+        $this->assertEquals($expected, $dictionary);
     }
 
     function provideDataForGetDictionary(){

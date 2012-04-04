@@ -107,7 +107,7 @@ class Selector {
         return $results;
     }
 
-    public function getDictionary( $keysPath, $valuesPath ){
+    protected function getDictionary( $keysPath, $valuesPath ){
         $keys = $this->getAll( $keysPath );
         $values = $this->getAll( $valuesPath, array() );
 
