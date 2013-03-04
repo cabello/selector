@@ -1,7 +1,7 @@
 {
     "name": "cabello/selector",
     "type": "library",
-    "description": "Extract info from JSON, StdClass in a fashionable way",
+    "description": "Extract information from JSON, StdClass in a fashionable way",
     "keywords": ["extract", "json", "stdclass"],
     "homepage": "http://jmsyst.com/libs/serializer",
     "license": "BSD-3-Clause",
