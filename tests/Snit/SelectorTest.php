@@ -1,6 +1,5 @@
 <?php
 
-require 'src/Snit/Selector.php';
 use Snit\Selector;
 
 class SelectorTest extends PHPUnit_Framework_TestCase {
