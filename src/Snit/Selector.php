@@ -39,6 +39,7 @@ class Selector
         switch ($this->askingFor($path)) {
         case 'list':
             $default = $default === '' ? array() : $default;
+
             return $this->getList($path, $default);
         case 'dictionary':
             return $this->getDictionaryFromPath($path);
@@ -50,6 +51,7 @@ class Selector
     public function findOne($contextPath, $fieldPath, $value)
     {
         $items = $this->findAll($contextPath, $fieldPath, $value);
+
         return array_shift($items);
     }
 
@@ -62,6 +64,7 @@ class Selector
             function ($item) use ($fieldPath, $value) {
                 $contextParser = new Selector($item);
                 $foundValues = $contextParser("[ {$fieldPath} ]");
+
                 return in_array($value, $foundValues);
             }
         );
@@ -77,6 +80,7 @@ class Selector
 
         $keys = array_keys($data);
         $stringKeys = array_filter($keys, 'is_string');
+
         return empty($stringKeys);
     }
 
@@ -95,7 +99,7 @@ class Selector
 
         if (strpos($path, '[') === $posFirstChar && strpos($path, ']') === $posLastChar) {
             return 'list';
-        } else if (strpos($path, '{') === $posFirstChar && strpos($path, '}') === $posLastChar) {
+        } elseif (strpos($path, '{') === $posFirstChar && strpos($path, '}') === $posLastChar) {
             return 'dictionary';
         }
 
@@ -116,6 +120,7 @@ class Selector
         $path = preg_replace('/\{|\}/', '', $path);
 
         list($keys, $values) = explode(':', $path);
+
         return $this->getDictionary($keys, $values);
     }
 
@@ -123,6 +128,7 @@ class Selector
     {
         $results = $this->getAll($path);
         $result = isset($results[0]) ? $results[0] : $default;
+
         return $result;
     }
 
@@ -164,7 +170,7 @@ class Selector
 
         array_map(
             function ($item) use (&$results, $attribute, $self) {
-                $item = (object)$item;
+                $item = (object) $item;
 
                 if (!isset($item->$attribute)) return;
 
@@ -194,7 +200,7 @@ class Selector
 
         if ($keysLen > $valuesLen) {
             $values = array_pad($values, $keysLen, null);
-        } else if ($valuesLen > $keysLen) {
+        } elseif ($valuesLen > $keysLen) {
             $values = array_slice($values, 0, $keysLen);
         }
 

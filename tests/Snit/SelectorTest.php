@@ -2,8 +2,10 @@
 
 use Snit\Selector;
 
-class SelectorTest extends PHPUnit_Framework_TestCase {
-    function getDataInJsonString() {
+class SelectorTest extends PHPUnit_Framework_TestCase
+{
+    public function getDataInJsonString()
+    {
         $json = '{
             "school": {
               "name": "Boston High School",
@@ -42,15 +44,18 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         return $json;
     }
 
-    function getDataInStdClass() {
+    public function getDataInStdClass()
+    {
         return json_decode($this->getDataInJsonString());
     }
 
-    function getDataInArray() {
+    public function getDataInArray()
+    {
         return json_decode($this->getDataInJsonString(), true);
     }
 
-    function test_get_dictionary_for_documentation() {
+    public function test_get_dictionary_for_documentation()
+    {
         $data = $this->getDataInStdClass();
         $selector = new Selector($data);
 
@@ -63,7 +68,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $result);
     }
 
-    function test_get_list_for_documentation() {
+    public function test_get_list_for_documentation()
+    {
         $data = $this->getDataInStdClass();
         $selector = new Selector($data);
 
@@ -72,7 +78,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $result);
     }
 
-    function test_get_one_for_documentation() {
+    public function test_get_one_for_documentation()
+    {
         $data = $this->getDataInStdClass();
         $selector = new Selector($data);
 
@@ -81,7 +88,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $result);
     }
 
-    function test_use_default_when_not_found_for_documentation() {
+    public function test_use_default_when_not_found_for_documentation()
+    {
         $data = $this->getDataInStdClass();
         $selector = new Selector($data);
 
@@ -90,7 +98,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $result);
     }
 
-    function test_focus_for_documentation() {
+    public function test_focus_for_documentation()
+    {
         $data = $this->getDataInStdClass();
         $selector = new Selector($data);
         $focusedSelector = $selector->focus('school.staff.teachers');
@@ -104,7 +113,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $result);
     }
 
-    function test_get_attribute_simple_happy_path(){
+    public function test_get_attribute_simple_happy_path()
+    {
         $jsonStub = new StdClass();
         $jsonStub->name = 'Willian';
 
@@ -114,7 +124,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('Willian', $bs('name'));
     }
 
-    function test_get_inexistent_attribute_should_return_null(){
+    public function test_get_inexistent_attribute_should_return_null()
+    {
         $jsonStub = new StdClass();
 
         $bs = new Selector($jsonStub);
@@ -123,7 +134,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('', $bs('name' ));
     }
 
-    function test_get_null_attribute_with_default_should_return_default(){
+    public function test_get_null_attribute_with_default_should_return_default()
+    {
         $defaultStub = "default stub";
         $jsonStub = new StdClass();
         $jsonStub->person = new StdClass();
@@ -137,7 +149,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($defaultStub, $one);
     }
 
-    function test_get_inexistent_attribute_with_default_should_return_default(){
+    public function test_get_inexistent_attribute_with_default_should_return_default()
+    {
         $jsonStub = new StdClass();
         $defaultStub = "default stub";
 
@@ -149,7 +162,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($defaultStub, $one);
     }
 
-    function test_get_attribute_from_null_data_should_return_null(){
+    public function test_get_attribute_from_null_data_should_return_null()
+    {
         $jsonStub = null;
 
         $bs = new Selector($jsonStub);
@@ -160,7 +174,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('', $one);
     }
 
-    function test_get_attribute_from_null_data_with_default_should_return_default(){
+    public function test_get_attribute_from_null_data_with_default_should_return_default()
+    {
         $jsonStub = null;
         $defaultStub = "default stub";
 
@@ -172,7 +187,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($defaultStub, $one);
     }
 
-    function test_get_nested_attribute_happy_path(){
+    public function test_get_nested_attribute_happy_path()
+    {
         $jsonStub = new StdClass();
         $jsonStub->person = new StdClass();
         $jsonStub->person->name = 'Willian';
@@ -187,7 +203,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('red', $carColor);
     }
 
-    function test_get_nested_invalid_attribute_should_return_null(){
+    public function test_get_nested_invalid_attribute_should_return_null()
+    {
         $jsonStub = new StdClass();
         $jsonStub->person = new StdClass();
         $jsonStub->person->name = 'Willian';
@@ -200,7 +217,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(array(), $allCarColors);
     }
 
-    function test_get_nested_invalid_attribute_with_default_should_return_default(){
+    public function test_get_nested_invalid_attribute_with_default_should_return_default()
+    {
         $defaultStub = "default stub";
 
         $jsonStub = new StdClass();
@@ -215,7 +233,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($defaultStub, $allCarColors);
     }
 
-    function test_get_nested_attribute_collection_happy_path(){
+    public function test_get_nested_attribute_collection_happy_path()
+    {
         $jsonStub = new StdClass();
         $jsonStub->person = new StdClass();
         $jsonStub->person->car = array( new stdClass, new stdClass );
@@ -230,7 +249,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals( array('red','yellow'), $car_colors);
     }
 
-    function test_get_attribute_collection_with_nested_object_happy_path(){
+    public function test_get_attribute_collection_with_nested_object_happy_path()
+    {
         $jsonStub = new StdClass();
         $jsonStub->person = new StdClass();
         $jsonStub->person = array(new stdClass, new stdClass);
@@ -250,8 +270,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals( $expected_one, $car_color);
     }
 
-
-    function test_get_attribute_collection_with_invalid_nested_path_should_return_null(){
+    public function test_get_attribute_collection_with_invalid_nested_path_should_return_null()
+    {
         $jsonStub = new StdClass();
         $jsonStub->person = array();
 
@@ -263,7 +283,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals( array(), $car_colors);
     }
 
-    function test_get_attribute_collection_with_invalid_nested_path_with_default_should_return_default(){
+    public function test_get_attribute_collection_with_invalid_nested_path_with_default_should_return_default()
+    {
         $defaultStub = "default stub";
 
         $jsonStub = new StdClass();
@@ -279,7 +300,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 
     /** @dataProvider provideDataForGetDictionary
     */
-    function test_getDictionary( $json, $expected ){
+    public function test_getDictionary( $json, $expected )
+    {
         $data = json_decode($json);
 
         $parser = new Selector($data);
@@ -288,7 +310,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $dictionary);
     }
 
-    function provideDataForGetDictionary(){
+    public function provideDataForGetDictionary()
+    {
         return array(
             array(
                 '{ "some" : { "keys" : [ "a", "b"], "values" : [ 1, 2 ] } }',
@@ -309,14 +332,16 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         );
     }
 
-    function test_constructing_with_json_string_should_convert_to_object() {
+    public function test_constructing_with_json_string_should_convert_to_object()
+    {
         $json = '{"key1":"foo", "key2":"bar"}';
         $parser = new Selector($json);
         $this->assertEquals("foo", $parser("key1"));
         $this->assertEquals("bar", $parser("key2"));
     }
 
-    function test_find_should_return_correct_context() {
+    public function test_find_should_return_correct_context()
+    {
         $json = '{
             "staff" : {
                 "people" : [
@@ -381,7 +406,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('Homonimo', $result[1]->name);
     }
 
-    function test_supports_simple_array() {
+    public function test_supports_simple_array()
+    {
         $array = array('display_name' => 'John Selector', 'age' => '34');
         $parser = new Selector($array);
 
@@ -389,7 +415,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('John Selector', $result);
     }
 
-    function test_supports_complex_array() {
+    public function test_supports_complex_array()
+    {
         $array = array('staff' => array(
             'people' => array(
                 array(
@@ -420,7 +447,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('Luiz Honda', $result);
     }
 
-    function test_supports_more_than_one_path() {
+    public function test_supports_more_than_one_path()
+    {
         $json = '{
             "profile" : {
                 "nickname" : {
@@ -444,7 +472,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('M', $result);
     }
 
-    function test_should_be_callable_and_awesome() {
+    public function test_should_be_callable_and_awesome()
+    {
         $json = '{
             "profile" : {
                 "nickname" : ["Luiz Honda", "Rafael Martins", "Danilo Cabello"]
@@ -466,7 +495,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
 
     /** @dataProvider provideDataForGetDictionary
     */
-    function test_getDictionary_using_callable_form($json, $expected){
+    public function test_getDictionary_using_callable_form($json, $expected)
+    {
         $data = json_decode($json);
 
         $parser = new Selector($data);
@@ -475,7 +505,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $dictionary);
     }
 
-    function test_focus_generates_a_new_parser() {
+    public function test_focus_generates_a_new_parser()
+    {
         $json = '{
             "record" : {
                 "ydht" : {
@@ -494,7 +525,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('Danilo', $focusedParser('name.value'));
     }
 
-    function test_focus_stay_quiet_on_nonexistent_context() {
+    public function test_focus_stay_quiet_on_nonexistent_context()
+    {
         $parser = new Selector();
         $focusedParser = $parser->focus('record.ydht.fields');
 
