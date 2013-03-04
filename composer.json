@@ -1,0 +1,28 @@
+{
+    "name": "cabello/selector",
+    "type": "library",
+    "description": "Extract info from JSON, StdClass in a fashionable way",
+    "keywords": ["extract", "json", "stdclass"],
+    "homepage": "http://jmsyst.com/libs/serializer",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Danilo Cabello",
+            "email": "danilo.cabello@gmail.com"
+        },
+        {
+            "name": "Rafael Martins"
+        }
+    ],
+    "require": {
+        "php": ">=5.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Snit": "src/"
+        }
+    }
+}
