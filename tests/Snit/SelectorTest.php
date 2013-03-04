@@ -316,19 +316,23 @@ class SelectorTest extends PHPUnit_Framework_TestCase
             array(
                 '{ "some" : { "keys" : [ "a", "b"], "values" : [ 1, 2 ] } }',
                 array('a' => 1, 'b' => 2)
-           ),
+            ),
             array(
                 '{ "some" : { "keys" : [ "a", "b"], "values" : [ 1, 2, 3 ] } }',
                 array('a' => 1, 'b' => 2)
-           ),
+            ),
             array(
                 '{ "some" : { "keys" : null, "values" : [ 1, 2 ] } }',
                 array()
-           ),
+            ),
+            array(
+                '{ "some" : { "keys" : [ "a", "b"], "values" : [ 1 ] } }',
+                array('a' => 1, 'b' => null)
+            ),
             array(
                 '{ "some" : { "keys" : [ "a", "b"], "values" : null } }',
                 array('a' => null, 'b' => null)
-           ),
+            ),
        );
     }
 
