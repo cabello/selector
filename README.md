@@ -47,3 +47,14 @@ Is the same as `foo->bar->baz` but it checks if everything is set before going d
 ### Hash
 
     $nameAge = $selector('{ profile.name : profile.age }')
+
+Developer
+---------
+
+Assuming you have `composer.phar` installed, it's simple to contribute to `selector`, clone the repository and run:
+
+    cd selector
+    composer.phar install --dev
+    vendor/bin/phpunit tests
+
+And you are ready to make new tests and contributions.
