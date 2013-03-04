@@ -403,6 +403,11 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Homonimo', $result[0]->name);
         $this->assertEquals(5, $result[1]->id);
         $this->assertEquals('Homonimo', $result[1]->name);
+
+        //find one
+        $result = $parser->findOne('staff.people', 'name', 'undefined');
+        $this->assertFalse(is_object($result));
+        $this->assertNull($result);
     }
 
     public function test_supports_simple_array()
