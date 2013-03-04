@@ -49,11 +49,6 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         return json_decode($this->getDataInJsonString());
     }
 
-    public function getDataInArray()
-    {
-        return json_decode($this->getDataInJsonString(), true);
-    }
-
     public function test_get_dictionary_for_documentation()
     {
         $data = $this->getDataInStdClass();
