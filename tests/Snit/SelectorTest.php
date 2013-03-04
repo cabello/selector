@@ -63,7 +63,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
             '1' => 'Luiz Honda',
             '3' => 'Willian Watanabe',
             '2' => 'Rafael Martins'
-        );
+       );
         $result = $selector('{ school.staff.teachers.id : school.staff.teachers.name }');
         $this->assertEquals($expected, $result);
     }
@@ -108,7 +108,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
             '1' => 'Luiz Honda',
             '3' => 'Willian Watanabe',
             '2' => 'Rafael Martins'
-        );
+       );
         $result = $focusedSelector('{ id : name }');
         $this->assertEquals($expected, $result);
     }
@@ -130,8 +130,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase
 
         $bs = new Selector($jsonStub);
 
-        $this->assertEquals(array(), $bs('[name]' ));
-        $this->assertEquals('', $bs('name' ));
+        $this->assertEquals(array(), $bs('[name]'));
+        $this->assertEquals('', $bs('name'));
     }
 
     public function test_get_null_attribute_with_default_should_return_default()
@@ -142,8 +142,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub->person->name = null;
 
         $bs = new Selector($jsonStub);
-        $all = $bs('[person.name]', $defaultStub );
-        $one = $bs('person.name', $defaultStub );
+        $all = $bs('[person.name]', $defaultStub);
+        $one = $bs('person.name', $defaultStub);
 
         $this->assertEquals($defaultStub, $all);
         $this->assertEquals($defaultStub, $one);
@@ -155,8 +155,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $defaultStub = "default stub";
 
         $bs = new Selector($jsonStub);
-        $all = $bs('[name]', $defaultStub );
-        $one = $bs('name', $defaultStub );
+        $all = $bs('[name]', $defaultStub);
+        $one = $bs('name', $defaultStub);
 
         $this->assertEquals($defaultStub, $all);
         $this->assertEquals($defaultStub, $one);
@@ -167,8 +167,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub = null;
 
         $bs = new Selector($jsonStub);
-        $all = $bs('[name]' );
-        $one = $bs('name' );
+        $all = $bs('[name]');
+        $one = $bs('name');
 
         $this->assertEquals(array(), $all);
         $this->assertEquals('', $one);
@@ -180,8 +180,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $defaultStub = "default stub";
 
         $bs = new Selector($jsonStub);
-        $all = $bs('[name]', $defaultStub );
-        $one = $bs('name', $defaultStub );
+        $all = $bs('[name]', $defaultStub);
+        $one = $bs('name', $defaultStub);
 
         $this->assertEquals($defaultStub, $all);
         $this->assertEquals($defaultStub, $one);
@@ -196,8 +196,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub->person->car->color = 'red';
 
         $bs = new Selector($jsonStub);
-        $name = $bs('person.name' );
-        $carColor = $bs('person.car.color' );
+        $name = $bs('person.name');
+        $carColor = $bs('person.car.color');
 
         $this->assertEquals('Willian', $name);
         $this->assertEquals('red', $carColor);
@@ -210,8 +210,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub->person->name = 'Willian';
 
         $bs = new Selector($jsonStub);
-        $carColor = $bs('person.car.color' );
-        $allCarColors = $bs('[person.car.color]' );
+        $carColor = $bs('person.car.color');
+        $allCarColors = $bs('[person.car.color]');
 
         $this->assertEquals(null, $carColor);
         $this->assertEquals(array(), $allCarColors);
@@ -226,8 +226,8 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub->person->name = 'Willian';
 
         $bs = new Selector($jsonStub);
-        $carColor = $bs('person.car.color', $defaultStub );
-        $allCarColors = $bs('[person.car.color]', $defaultStub );
+        $carColor = $bs('person.car.color', $defaultStub);
+        $allCarColors = $bs('[person.car.color]', $defaultStub);
 
         $this->assertEquals($defaultStub, $carColor);
         $this->assertEquals($defaultStub, $allCarColors);
@@ -237,7 +237,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
     {
         $jsonStub = new StdClass();
         $jsonStub->person = new StdClass();
-        $jsonStub->person->car = array( new stdClass, new stdClass );
+        $jsonStub->person->car = array(new stdClass, new stdClass);
         $jsonStub->person->car[0]->color = 'red';
         $jsonStub->person->car[1]->color = 'yellow';
 
@@ -246,7 +246,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $car_colors = $bs('[person.car.color]');
 
         $this->assertEquals('red', $car_color);
-        $this->assertEquals( array('red','yellow'), $car_colors);
+        $this->assertEquals(array('red','yellow'), $car_colors);
     }
 
     public function test_get_attribute_collection_with_nested_object_happy_path()
@@ -260,14 +260,14 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub->person[1]->car->color = 'yellow';
 
         $bs = new Selector($jsonStub);
-        $car_color = $bs('person.car.color' );
-        $car_colors = $bs('[person.car.color]' );
+        $car_color = $bs('person.car.color');
+        $car_colors = $bs('[person.car.color]');
 
         $expected_all = array('red','yellow');
         $expected_one = 'red';
 
-        $this->assertEquals( $expected_all, $car_colors);
-        $this->assertEquals( $expected_one, $car_color);
+        $this->assertEquals($expected_all, $car_colors);
+        $this->assertEquals($expected_one, $car_color);
     }
 
     public function test_get_attribute_collection_with_invalid_nested_path_should_return_null()
@@ -276,11 +276,11 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub->person = array();
 
         $bs = new Selector($jsonStub);
-        $car_color = $bs('person.car.color' );
-        $car_colors = $bs('[person.car.color]' );
+        $car_color = $bs('person.car.color');
+        $car_colors = $bs('[person.car.color]');
 
-        $this->assertEquals( null, $car_color);
-        $this->assertEquals( array(), $car_colors);
+        $this->assertEquals(null, $car_color);
+        $this->assertEquals(array(), $car_colors);
     }
 
     public function test_get_attribute_collection_with_invalid_nested_path_with_default_should_return_default()
@@ -291,16 +291,16 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub->person = array();
 
         $bs = new Selector($jsonStub);
-        $car_color = $bs('person.car.color', $defaultStub );
-        $car_colors = $bs('[person.car.color]', $defaultStub );
+        $car_color = $bs('person.car.color', $defaultStub);
+        $car_colors = $bs('[person.car.color]', $defaultStub);
 
-        $this->assertEquals( $defaultStub, $car_color);
-        $this->assertEquals( $defaultStub, $car_colors);
+        $this->assertEquals($defaultStub, $car_color);
+        $this->assertEquals($defaultStub, $car_colors);
     }
 
     /** @dataProvider provideDataForGetDictionary
     */
-    public function test_getDictionary( $json, $expected )
+    public function test_getDictionary($json, $expected)
     {
         $data = json_decode($json);
 
@@ -315,21 +315,21 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         return array(
             array(
                 '{ "some" : { "keys" : [ "a", "b"], "values" : [ 1, 2 ] } }',
-                array( 'a' => 1, 'b' => 2 )
-            ),
+                array('a' => 1, 'b' => 2)
+           ),
             array(
                 '{ "some" : { "keys" : [ "a", "b"], "values" : [ 1, 2, 3 ] } }',
-                array( 'a' => 1, 'b' => 2 )
-            ),
+                array('a' => 1, 'b' => 2)
+           ),
             array(
                 '{ "some" : { "keys" : null, "values" : [ 1, 2 ] } }',
                 array()
-            ),
+           ),
             array(
                 '{ "some" : { "keys" : [ "a", "b"], "values" : null } }',
-                array( 'a' => null, 'b' => null )
-            ),
-        );
+                array('a' => null, 'b' => null)
+           ),
+       );
     }
 
     public function test_constructing_with_json_string_should_convert_to_object()
@@ -377,29 +377,29 @@ class SelectorTest extends PHPUnit_Framework_TestCase
                 ]
             }
         }';
-        $parser = new Selector( $json );
+        $parser = new Selector($json);
 
         //find one
         $result = $parser->findOne('staff.people', 'name', 'watinha2004');
-        $this->assertTrue(is_object( $result ));
+        $this->assertTrue(is_object($result));
         $this->assertEquals(3, $result->id);
         $this->assertEquals('watinha2004', $result->name);
 
         //find all
         $result = $parser->findAll('staff.people', 'children.name', 'Alex');
-        $this->assertTrue(is_array( $result ));
+        $this->assertTrue(is_array($result));
         $this->assertEquals(6, $result[0]->children[0]->id);
         $this->assertEquals('Alex', $result[0]->children[0]->name);
 
         //find one
         $result = $parser->findOne('staff.people.children', 'name', 'Homonimo');
-        $this->assertTrue(is_object( $result ));
+        $this->assertTrue(is_object($result));
         $this->assertEquals(4, $result->id);
         $this->assertEquals('Homonimo', $result->name);
 
         //find all
         $result = $parser->findAll('staff.people.children', 'name', 'Homonimo');
-        $this->assertTrue(is_array( $result ));
+        $this->assertTrue(is_array($result));
         $this->assertEquals(4, $result[0]->id);
         $this->assertEquals('Homonimo', $result[0]->name);
         $this->assertEquals(5, $result[1]->id);
@@ -424,23 +424,23 @@ class SelectorTest extends PHPUnit_Framework_TestCase
                     'name' => 'Luiz Honda',
                     'children' => array(
                         array('id' => 6, 'name' => 'Alex'),
-                    ),
-                ),
+                   ),
+               ),
                 array(
                     'id' => 3,
                     'name' => 'watinha2004',
                     'visibility' => 'private',
-                ),
+               ),
                 array(
                     'id' => 2,
                     'name' => 'Danilo Cabello',
                     'children' => array(
                         array('id' => 4, 'name' => 'Homonimo'),
                         array('id' => 5, 'name' => 'Homonimo'),
-                    ),
-                ),
-            ),
-        ));
+                   ),
+               ),
+           ),
+       ));
         $parser = new Selector($array);
 
         $result = $parser('staff.people.name');
