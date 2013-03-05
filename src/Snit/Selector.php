@@ -143,9 +143,8 @@ class Selector
     private function getOne($path, $default='')
     {
         $results = $this->getAll($path);
-        $result = isset($results[0]) ? $results[0] : $default;
 
-        return $result;
+        return count($results) ? array_shift($results) : $default;
     }
 
     /**

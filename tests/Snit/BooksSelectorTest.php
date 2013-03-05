@@ -11,7 +11,8 @@ class BooksSelectorTest extends PHPUnit_Framework_TestCase
                 {
                     "isbn": "abc123",
                     "title": "Abc",
-                    "authors": ["John", "Kevin"]
+                    "authors": ["John", "Kevin"],
+                    "edition": null
                 },
                 {
                     "isbn": "def456",
@@ -92,5 +93,25 @@ class BooksSelectorTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue(is_array($result));
         $this->assertCount(0, $result);
+    }
+
+    public function testGetOne()
+    {
+        $selector = new Selector($this->getBookDataInStdClass());
+
+        $result = $selector('books.isbn');
+
+        $this->assertEquals('abc123', $result);
+    }
+
+    public function testGetOneReturnsDefaultIfNotFound()
+    {
+        $selector = new Selector($this->getBookDataInStdClass());
+
+        $default = 'not found';
+
+        $result = $selector('books.publish_date', $default);
+
+        $this->assertEquals($default, $result);
     }
 }
