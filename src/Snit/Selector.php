@@ -193,7 +193,7 @@ class Selector
         $data = $this->data;
 
         foreach ($pathParts as $attribute) {
-            if (! isset($data->$attribute)) {
+            if ( ! isset($data->$attribute)) {
                 $data = null;
                 break;
             }
@@ -205,12 +205,12 @@ class Selector
     }
 
     /**
-     * [getAll description]
+     * Find all elements that match path or default if none found.
      *
-     * @param [type] $path    [description]
-     * @param array  $default [description]
+     * @param string      $path    Path to look for info
+     * @param array|mixed $default Value to return if not found
      *
-     * @return [type]          [description]
+     * @return array|mixed Array of found items or default value otherwise
      */
     private function getAll($path, $default=array())
     {
@@ -228,11 +228,11 @@ class Selector
     }
 
     /**
-     * [getAllFromPath description]
+     * Find all elements that match path.
      *
-     * @param [type] $path [description]
+     * @param string $path Path to look for info
      *
-     * @return [type]       [description]
+     * @return array|false Array of found elements, false otherwise
      */
     private function getAllFromPath($path)
     {
@@ -241,7 +241,7 @@ class Selector
         $data = $this->data;
 
         foreach ($pathParts as $attribute) {
-            if (!$data) break;
+            if ( ! $data) break;
             $results = $data = $this->getAllWithAttribute($data, $attribute);
         }
 
@@ -249,12 +249,12 @@ class Selector
     }
 
     /**
-     * [getAllWithAttribute description]
+     * Find all elements that match attribute.
      *
-     * @param [type] $data      [description]
-     * @param [type] $attribute [description]
+     * @param \StdClass $data      Data to look into
+     * @param string    $attribute Attribute to match
      *
-     * @return [type]            [description]
+     * @return array Matched items
      */
     private function getAllWithAttribute($data, $attribute)
     {
@@ -267,7 +267,7 @@ class Selector
             function ($item) use (&$results, $attribute, $self) {
                 $item = (object) $item;
 
-                if (!isset($item->$attribute)) return;
+                if ( ! isset($item->$attribute)) return;
 
                 if ($self->isList($item->$attribute)) {
                     $results = array_merge(array_values($item->$attribute), $results);
@@ -282,19 +282,19 @@ class Selector
     }
 
     /**
-     * [getDictionary description]
+     * Assemble a dictionary.
      *
-     * @param [type] $keysPath   [description]
-     * @param [type] $valuesPath [description]
+     * @param string $keysPath   Path for the keys
+     * @param string $valuesPath Path for the values
      *
-     * @return [type]             [description]
+     * @return array Array with keys matching values
      */
     private function getDictionary($keysPath, $valuesPath)
     {
         $keys = $this->getAll($keysPath);
         $values = $this->getAll($valuesPath, array());
 
-        if (!$keys || !is_array($keys)) {
+        if ( ! $keys || !is_array($keys)) {
             return array();
         }
 
@@ -319,7 +319,7 @@ class Selector
      */
     public function isList($data)
     {
-        if (! is_array($data)) {
+        if ( ! is_array($data)) {
             return false;
         }
 
