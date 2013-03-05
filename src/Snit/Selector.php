@@ -317,7 +317,7 @@ class Selector
      *
      * @return boolean
      */
-    private function isList($data)
+    public function isList($data)
     {
         if (! is_array($data)) {
             return false;
