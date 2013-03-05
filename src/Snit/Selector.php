@@ -105,11 +105,11 @@ class Selector
     }
 
     /**
-     * [getDictionaryFromPath description]
+     * Return a dictionary (array with string keys pointing to values).
      *
-     * @param [type] $path [description]
+     * @param string $path Path to look for info
      *
-     * @return [type]       [description]
+     * @return array Found data with keys and values
      */
     private function getDictionaryFromPath($path)
     {
@@ -122,12 +122,12 @@ class Selector
     }
 
     /**
-     * [getOne description]
+     * Return a single result found using path.
      *
-     * @param [type] $path    [description]
-     * @param string $default [description]
+     * @param string $path    Path to look for info
+     * @param string $default Default value if not found
      *
-     * @return [type]          [description]
+     * @return mixed Found info or default otherwise
      */
     private function getOne($path, $default='')
     {
