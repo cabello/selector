@@ -99,7 +99,7 @@ class BooksSelectorTest extends PHPUnit_Framework_TestCase
     {
         $selector = new Selector($this->getBookDataInStdClass());
 
-        $result = $selector('books.isbn');
+        $result = $selector->getOne('books.isbn');
 
         $this->assertEquals('abc123', $result);
     }
@@ -110,7 +110,7 @@ class BooksSelectorTest extends PHPUnit_Framework_TestCase
 
         $default = 'not found';
 
-        $result = $selector('books.publish_date', $default);
+        $result = $selector->getOne('books.publish_date', $default);
 
         $this->assertEquals($default, $result);
     }

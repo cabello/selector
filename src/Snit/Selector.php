@@ -5,71 +5,12 @@ namespace Snit;
 /**
  * Selector allows you to extract information from JSON or StdClass.
  */
-class Selector
+class Selector extends AbstractSelector
 {
-    /**
-     * Object containing information to be extracted.
-     *
-     * @var \StdClass
-     */
-    private $data;
-
     private $tokens = array(
         'or'              => '|',
         'child'           => '.',
     );
-
-    /**
-     * Receive the data to have information extracted.
-     *
-     * @param \StdClass|string $objectOrString StdClass or string (JSON to be decoded)
-     */
-    public function __construct($objectOrString=null)
-    {
-        if (is_string($objectOrString)) {
-            $objectOrString = json_decode($objectOrString);
-        }
-
-        $this->data = $objectOrString;
-    }
-
-    /**
-     * Allow elegant call using only parentheses like a function.
-     *
-     * @param string $path    List, or dictionary, or field to extract info
-     * @param string $default Default value if not found
-     *
-     * @return string|array Extracted information or default if not found
-     */
-    public function __invoke($path, $default='')
-    {
-        $path = $this->clearPath($path);
-
-        if (preg_match('/^\[.*\]$/', $path)) {
-            $default = $default === '' ? array() : $default;
-
-            return $this->getList($path, $default);
-        } elseif (preg_match('/^\{.*\}$/', $path)) {
-            return $this->getDictionaryFromPath($path);
-        }
-
-        return $this->getOne($path, $default);
-    }
-
-    /**
-     * Remove all (at begin, end and inside) spaces from path.
-     *
-     * @param string $path Path
-     *
-     * @return string Path without spaces
-     */
-    private function clearPath($path)
-    {
-        // Strip off multiple spaces
-        $path = preg_replace('/\s+/', '', $path);
-
-        return $path;
-    }
 
     /**
      * Return a list using path to find fields.
@@ -79,7 +20,7 @@ class Selector
      *
      * @return array Found data
      */
-    private function getList($path, $default)
+    public function getList($path, $default=array())
     {
         // Strip off []
         $path = preg_replace('/(^\[)|(\]$)/', '', $path);
@@ -94,7 +35,7 @@ class Selector
      *
      * @return array Found data with keys and values
      */
-    private function getDictionaryFromPath($path)
+    public function getDictionaryFromPath($path)
     {
         // Strip off {}
         $path = preg_replace('/(^\{)|(\}$)/', '', $path);
@@ -112,7 +53,7 @@ class Selector
      *
      * @return mixed Found info or default otherwise
      */
-    private function getOne($path, $default='')
+    public function getOne($path, $default='')
     {
         $results = $this->getAll($path);
 
@@ -152,7 +93,7 @@ class Selector
             $contextObjects,
             function ($item) use ($fieldPath, $value) {
                 $contextParser = new Selector($item);
-                $foundValues = $contextParser("[ {$fieldPath} ]");
+                $foundValues = $contextParser->getList($fieldPath);
 
                 return in_array($value, $foundValues);
             }

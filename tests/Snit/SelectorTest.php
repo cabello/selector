@@ -1,5 +1,6 @@
 <?php
 
+use Snit\QuerySelector;
 use Snit\Selector;
 
 class SelectorTest extends PHPUnit_Framework_TestCase
@@ -52,7 +53,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
     public function test_get_dictionary_for_documentation()
     {
         $data = $this->getDataInStdClass();
-        $selector = new Selector($data);
+        $selector = new QuerySelector($data);
 
         $expected = array(
             '1' => 'Luiz Honda',
@@ -66,7 +67,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
     public function test_get_list_for_documentation()
     {
         $data = $this->getDataInStdClass();
-        $selector = new Selector($data);
+        $selector = new QuerySelector($data);
 
         $expected = array(1,3,2);
         $result = $selector('[ school.staff.teachers.id ]');
@@ -76,7 +77,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
     public function test_get_one_for_documentation()
     {
         $data = $this->getDataInStdClass();
-        $selector = new Selector($data);
+        $selector = new QuerySelector($data);
 
         $expected = 'Luiz Honda';
         $result = $selector('school.staff.teachers.name');
@@ -86,7 +87,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
     public function test_use_default_when_not_found_for_documentation()
     {
         $data = $this->getDataInStdClass();
-        $selector = new Selector($data);
+        $selector = new QuerySelector($data);
 
         $expected = 21;
         $result = $selector('school.staff.teachers.age', 21);
@@ -104,7 +105,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
             '3' => 'Willian Watanabe',
             '2' => 'Rafael Martins'
        );
-        $result = $focusedSelector('{ id : name }');
+        $result = $focusedSelector->getDictionaryFromPath('{id:name}');
         $this->assertEquals($expected, $result);
     }
 
@@ -113,7 +114,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub = new StdClass();
         $jsonStub->name = 'Willian';
 
-        $bs = new Selector($jsonStub);
+        $bs = new QuerySelector($jsonStub);
 
         $this->assertEquals(array('Willian'), $bs('[name]'));
         $this->assertEquals('Willian', $bs('name'));
@@ -123,7 +124,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
     {
         $jsonStub = new StdClass();
 
-        $bs = new Selector($jsonStub);
+        $bs = new QuerySelector($jsonStub);
 
         $this->assertEquals(array(), $bs('[name]'));
         $this->assertEquals('', $bs('name'));
@@ -136,7 +137,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub->person = new StdClass();
         $jsonStub->person->name = null;
 
-        $bs = new Selector($jsonStub);
+        $bs = new QuerySelector($jsonStub);
         $all = $bs('[person.name]', $defaultStub);
         $one = $bs('person.name', $defaultStub);
 
@@ -149,7 +150,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub = new StdClass();
         $defaultStub = "default stub";
 
-        $bs = new Selector($jsonStub);
+        $bs = new QuerySelector($jsonStub);
         $all = $bs('[name]', $defaultStub);
         $one = $bs('name', $defaultStub);
 
@@ -161,7 +162,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
     {
         $jsonStub = null;
 
-        $bs = new Selector($jsonStub);
+        $bs = new QuerySelector($jsonStub);
         $all = $bs('[name]');
         $one = $bs('name');
 
@@ -174,7 +175,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub = null;
         $defaultStub = "default stub";
 
-        $bs = new Selector($jsonStub);
+        $bs = new QuerySelector($jsonStub);
         $all = $bs('[name]', $defaultStub);
         $one = $bs('name', $defaultStub);
 
@@ -190,7 +191,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub->person->car = new stdClass();
         $jsonStub->person->car->color = 'red';
 
-        $bs = new Selector($jsonStub);
+        $bs = new QuerySelector($jsonStub);
         $name = $bs('person.name');
         $carColor = $bs('person.car.color');
 
@@ -204,7 +205,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub->person = new StdClass();
         $jsonStub->person->name = 'Willian';
 
-        $bs = new Selector($jsonStub);
+        $bs = new QuerySelector($jsonStub);
         $carColor = $bs('person.car.color');
         $allCarColors = $bs('[person.car.color]');
 
@@ -220,7 +221,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub->person = new StdClass();
         $jsonStub->person->name = 'Willian';
 
-        $bs = new Selector($jsonStub);
+        $bs = new QuerySelector($jsonStub);
         $carColor = $bs('person.car.color', $defaultStub);
         $allCarColors = $bs('[person.car.color]', $defaultStub);
 
@@ -236,7 +237,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub->person->car[0]->color = 'red';
         $jsonStub->person->car[1]->color = 'yellow';
 
-        $bs = new Selector($jsonStub);
+        $bs = new QuerySelector($jsonStub);
         $car_color = $bs('person.car.color');
         $car_colors = $bs('[person.car.color]');
 
@@ -254,7 +255,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub->person[0]->car->color = 'red';
         $jsonStub->person[1]->car->color = 'yellow';
 
-        $bs = new Selector($jsonStub);
+        $bs = new QuerySelector($jsonStub);
         $car_color = $bs('person.car.color');
         $car_colors = $bs('[person.car.color]');
 
@@ -270,7 +271,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub = new StdClass();
         $jsonStub->person = array();
 
-        $bs = new Selector($jsonStub);
+        $bs = new QuerySelector($jsonStub);
         $car_color = $bs('person.car.color');
         $car_colors = $bs('[person.car.color]');
 
@@ -285,7 +286,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $jsonStub = new StdClass();
         $jsonStub->person = array();
 
-        $bs = new Selector($jsonStub);
+        $bs = new QuerySelector($jsonStub);
         $car_color = $bs('person.car.color', $defaultStub);
         $car_colors = $bs('[person.car.color]', $defaultStub);
 
@@ -299,7 +300,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
     {
         $data = json_decode($json);
 
-        $parser = new Selector($data);
+        $parser = new QuerySelector($data);
         $dictionary = $parser('{ some.keys : some.values }');
 
         $this->assertEquals($expected, $dictionary);
@@ -334,7 +335,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
     public function test_constructing_with_json_string_should_convert_to_object()
     {
         $json = '{"key1":"foo", "key2":"bar"}';
-        $parser = new Selector($json);
+        $parser = new QuerySelector($json);
         $this->assertEquals("foo", $parser("key1"));
         $this->assertEquals("bar", $parser("key2"));
     }
@@ -413,7 +414,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
     public function test_supports_simple_array()
     {
         $array = array('display_name' => 'John Selector', 'age' => '34');
-        $parser = new Selector($array);
+        $parser = new QuerySelector($array);
 
         $result = $parser('display_name');
         $this->assertEquals('John Selector', $result);
@@ -445,7 +446,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
                ),
            ),
        ));
-        $parser = new Selector($array);
+        $parser = new QuerySelector($array);
 
         $result = $parser('staff.people.name');
         $this->assertEquals('Luiz Honda', $result);
@@ -464,7 +465,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         }';
         $array = json_decode($json);
 
-        $parser = new Selector($array);
+        $parser = new QuerySelector($array);
 
         $result = $parser('  profile.nickname.v | profile.nickname  ');
         $this->assertEquals('Luiz Honda', $result);
@@ -485,7 +486,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         }';
         $array = json_decode($json);
 
-        $parser = new Selector($array);
+        $parser = new QuerySelector($array);
 
         // this way it will call getOne
         $result = $parser('profile.nickname');
@@ -503,7 +504,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
     {
         $data = json_decode($json);
 
-        $parser = new Selector($data);
+        $parser = new QuerySelector($data);
         $dictionary = $parser(' { some.keys : some.values } ');
 
         $this->assertEquals($expected, $dictionary);
@@ -526,7 +527,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $parser = new Selector($data);
         $focusedParser = $parser->focus('record.ydht.fields');
 
-        $this->assertEquals('Danilo', $focusedParser('name.value'));
+        $this->assertEquals('Danilo', $focusedParser->getOne('name.value'));
     }
 
     public function test_focus_stay_quiet_on_nonexistent_context()
@@ -535,6 +536,6 @@ class SelectorTest extends PHPUnit_Framework_TestCase
         $focusedParser = $parser->focus('record.ydht.fields');
 
         $default = 'Unnamed';
-        $this->assertEquals($default, $focusedParser('name.value', $default));
+        $this->assertEquals($default, $focusedParser->getOne('name.value', $default));
     }
 }
