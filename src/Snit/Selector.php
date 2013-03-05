@@ -29,6 +29,157 @@ class Selector
     }
 
     /**
+     * Allow elegant call using only parentheses like a function.
+     *
+     * @param string $path    List, or dictionary, or field to extract info
+     * @param string $default Default value if not found
+     *
+     * @return string|array Extracted information or default if not found
+     */
+    public function __invoke($path, $default='')
+    {
+        $path = $this->clearPath($path);
+
+        switch ($this->askingFor($path)) {
+        case 'list':
+            $default = $default === '' ? array() : $default;
+
+            return $this->getList($path, $default);
+        case 'dictionary':
+            return $this->getDictionaryFromPath($path);
+        default:
+            return $this->getOne($path, $default);
+        }
+    }
+
+    /**
+     * Remove all (at begin, end and inside) spaces from path.
+     *
+     * @param string $path Path
+     *
+     * @return string Path without spaces
+     */
+    private function clearPath($path)
+    {
+        // Strip off multiple spaces
+        $path = preg_replace('/\s+/', '', $path);
+
+        return $path;
+    }
+
+    /**
+     * Find out what the user is asking for: list, dictionary or string.
+     *
+     * @param string $path Requested path
+     *
+     * @return string Possible values: list, dictionary, one (string)
+     */
+    private function askingFor($path)
+    {
+        $posFirstChar = 0;
+        $posLastChar = strlen($path) - 1;
+
+        if (strpos($path, '[') === $posFirstChar && strpos($path, ']') === $posLastChar) {
+            return 'list';
+        } elseif (strpos($path, '{') === $posFirstChar && strpos($path, '}') === $posLastChar) {
+            return 'dictionary';
+        }
+
+        return 'one';
+    }
+
+    /**
+     * Return a list using path to find fields.
+     *
+     * @param string $path    Path to look for info
+     * @param string $default Default value if path not match
+     *
+     * @return array Found data
+     */
+    private function getList($path, $default)
+    {
+        // Strip off[]
+        $path = preg_replace('/\[|\]/', '', $path);
+
+        return $this->getAll($path, $default);
+    }
+
+    /**
+     * [getDictionaryFromPath description]
+     *
+     * @param [type] $path [description]
+     *
+     * @return [type]       [description]
+     */
+    private function getDictionaryFromPath($path)
+    {
+        // Strip off[]
+        $path = preg_replace('/\{|\}/', '', $path);
+
+        list($keys, $values) = explode(':', $path);
+
+        return $this->getDictionary($keys, $values);
+    }
+
+    /**
+     * [getOne description]
+     *
+     * @param [type] $path    [description]
+     * @param string $default [description]
+     *
+     * @return [type]          [description]
+     */
+    private function getOne($path, $default='')
+    {
+        $results = $this->getAll($path);
+        $result = isset($results[0]) ? $results[0] : $default;
+
+        return $result;
+    }
+
+    /**
+     * Find the first information that match the path.
+     *
+     * @param string $contextPath Context to return
+     * @param string $fieldPath   Field to be matched
+     * @param string $value       Value to be matched
+     *
+     * @return \StdClass|string|array|null Context if found, null otherwise
+     */
+    public function findOne($contextPath, $fieldPath, $value)
+    {
+        $items = $this->findAll($contextPath, $fieldPath, $value);
+
+        return array_shift($items);
+    }
+
+    /**
+     * Find all information that match the path.
+     *
+     * @param string $contextPath Context to return
+     * @param string $fieldPath   Field to be matched
+     * @param string $value       Value to be matched
+     *
+     * @return array|null Array of contexts if found, null otherwise
+     */
+    public function findAll($contextPath, $fieldPath, $value)
+    {
+        $contextObjects = $this->getAll($contextPath);
+
+        $foundObjects = array_filter(
+            $contextObjects,
+            function ($item) use ($fieldPath, $value) {
+                $contextParser = new Selector($item);
+                $foundValues = $contextParser("[ {$fieldPath} ]");
+
+                return in_array($value, $foundValues);
+            }
+        );
+
+        return $foundObjects;
+    }
+
+    /**
      * Advance into a structure to allow less typing when selecting.
      *
      * @param string $path Path to be focused, example: school.staff
@@ -54,176 +205,6 @@ class Selector
     }
 
     /**
-     * Allow elegant call using only parentheses like a function.
-     *
-     * @param string $path    List, or dictionary, or field to extract info
-     * @param string $default Default value if not found
-     *
-     * @return string|array Extracted information or default if not found
-     */
-    public function __invoke($path, $default='')
-    {
-        $path = $this->clearPath($path);
-
-        switch ($this->askingFor($path)) {
-        case 'list':
-            $default = $default === '' ? array() : $default;
-
-            return $this->getList($path, $default);
-        case 'dictionary':
-            return $this->getDictionaryFromPath($path);
-        default:
-            return $this->getOne($path, $default);
-        }
-    }
-
-    /**
-     * Find the first information that match the path.
-     *
-     * @param string $contextPath Context to return
-     * @param string $fieldPath   Field to be matched
-     * @param string $value       Value to be matched
-     *
-     * @return \StdClass|string|array|null From context path if found
-     */
-    public function findOne($contextPath, $fieldPath, $value)
-    {
-        $items = $this->findAll($contextPath, $fieldPath, $value);
-
-        return array_shift($items);
-    }
-
-    /**
-     * [findAll description]
-     *
-     * @param [type] $contextPath [description]
-     * @param [type] $fieldPath   [description]
-     * @param [type] $value       [description]
-     *
-     * @return [type]              [description]
-     */
-    public function findAll($contextPath, $fieldPath, $value)
-    {
-        $contextObjects = $this->getAll($contextPath);
-
-        $foundObjects = array_filter(
-            $contextObjects,
-            function ($item) use ($fieldPath, $value) {
-                $contextParser = new Selector($item);
-                $foundValues = $contextParser("[ {$fieldPath} ]");
-
-                return in_array($value, $foundValues);
-            }
-        );
-
-        return $foundObjects;
-    }
-
-    /**
-     * [isList description]
-     *
-     * @param [type] $data [description]
-     *
-     * @return boolean       [description]
-     */
-    public function isList($data)
-    {
-        if (! is_array($data)) {
-            return false;
-        }
-
-        $keys = array_keys($data);
-        $stringKeys = array_filter($keys, 'is_string');
-
-        return empty($stringKeys);
-    }
-
-    /**
-     * [clearPath description]
-     *
-     * @param [type] $path [description]
-     *
-     * @return [type]       [description]
-     */
-    protected function clearPath($path)
-    {
-        // Strip off multiple spaces
-        $path = preg_replace('/\s+/', '', $path);
-
-        return $path;
-    }
-
-    /**
-     * [askingFor description]
-     *
-     * @param [type] $path [description]
-     *
-     * @return [type]       [description]
-     */
-    protected function askingFor($path)
-    {
-        $posFirstChar = 0;
-        $posLastChar = strlen($path) - 1;
-
-        if (strpos($path, '[') === $posFirstChar && strpos($path, ']') === $posLastChar) {
-            return 'list';
-        } elseif (strpos($path, '{') === $posFirstChar && strpos($path, '}') === $posLastChar) {
-            return 'dictionary';
-        }
-
-        return 'one';
-    }
-
-    /**
-     * [getList description]
-     *
-     * @param [type] $path    [description]
-     * @param [type] $default [description]
-     *
-     * @return [type]          [description]
-     */
-    protected function getList($path, $default)
-    {
-        // Strip off[]
-        $path = preg_replace('/\[|\]/', '', $path);
-
-        return $this->getAll($path, $default);
-    }
-
-    /**
-     * [getDictionaryFromPath description]
-     *
-     * @param [type] $path [description]
-     *
-     * @return [type]       [description]
-     */
-    protected function getDictionaryFromPath($path)
-    {
-        // Strip off[]
-        $path = preg_replace('/\{|\}/', '', $path);
-
-        list($keys, $values) = explode(':', $path);
-
-        return $this->getDictionary($keys, $values);
-    }
-
-    /**
-     * [getOne description]
-     *
-     * @param [type] $path    [description]
-     * @param string $default [description]
-     *
-     * @return [type]          [description]
-     */
-    protected function getOne($path, $default='')
-    {
-        $results = $this->getAll($path);
-        $result = isset($results[0]) ? $results[0] : $default;
-
-        return $result;
-    }
-
-    /**
      * [getAll description]
      *
      * @param [type] $path    [description]
@@ -231,7 +212,7 @@ class Selector
      *
      * @return [type]          [description]
      */
-    protected function getAll($path, $default=array())
+    private function getAll($path, $default=array())
     {
         $orToken = '|';
         $possiblePaths = explode($orToken, $path);
@@ -253,7 +234,7 @@ class Selector
      *
      * @return [type]       [description]
      */
-    protected function getAllFromPath($path)
+    private function getAllFromPath($path)
     {
         $pathParts = explode('.', $path);
         $results = array();
@@ -275,7 +256,7 @@ class Selector
      *
      * @return [type]            [description]
      */
-    protected function getAllWithAttribute($data, $attribute)
+    private function getAllWithAttribute($data, $attribute)
     {
         $data = $this->isList($data) ? $data : array($data);
         $results = array();
@@ -308,7 +289,7 @@ class Selector
      *
      * @return [type]             [description]
      */
-    protected function getDictionary($keysPath, $valuesPath)
+    private function getDictionary($keysPath, $valuesPath)
     {
         $keys = $this->getAll($keysPath);
         $values = $this->getAll($valuesPath, array());
@@ -327,5 +308,24 @@ class Selector
         }
 
         return array_combine($keys, $values);
+    }
+
+    /**
+     * Determine if parameter is list (array with numeric integer keys).
+     *
+     * @param mixed $data List, dictionary or string
+     *
+     * @return boolean
+     */
+    private function isList($data)
+    {
+        if (! is_array($data)) {
+            return false;
+        }
+
+        $keys = array_keys($data);
+        $stringKeys = array_filter($keys, 'is_string');
+
+        return empty($stringKeys);
     }
 }
