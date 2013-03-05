@@ -14,6 +14,15 @@ class Selector
      */
     private $data;
 
+    private $tokens = array(
+        'or'              => '|',
+        'child'           => '.',
+        'dictionaryBegin' => '{',
+        'dictionaryEnd'   => '}',
+        'listBegin'       => '[',
+        'listEnd'         => ']',
+    );
+
     /**
      * Receive the data to have information extracted.
      *
@@ -79,9 +88,11 @@ class Selector
         $posFirstChar = 0;
         $posLastChar = strlen($path) - 1;
 
-        if (strpos($path, '[') === $posFirstChar && strpos($path, ']') === $posLastChar) {
+        if (strpos($path, $this->tokens['listBegin']) === $posFirstChar &&
+                strpos($path, $this->tokens['listEnd']) === $posLastChar) {
             return 'list';
-        } elseif (strpos($path, '{') === $posFirstChar && strpos($path, '}') === $posLastChar) {
+        } elseif (strpos($path, $this->tokens['dictionaryBegin']) === $posFirstChar &&
+                strpos($path, $this->tokens['dictionaryEnd']) === $posLastChar) {
             return 'dictionary';
         }
 
@@ -98,7 +109,7 @@ class Selector
      */
     private function getList($path, $default)
     {
-        // Strip off[]
+        // Strip off []
         $path = preg_replace('/\[|\]/', '', $path);
 
         return $this->getAll($path, $default);
@@ -113,7 +124,7 @@ class Selector
      */
     private function getDictionaryFromPath($path)
     {
-        // Strip off[]
+        // Strip off {}
         $path = preg_replace('/\{|\}/', '', $path);
 
         list($keys, $values) = explode(':', $path);
@@ -188,7 +199,7 @@ class Selector
      */
     public function focus($path)
     {
-        $pathParts = explode('.', $path);
+        $pathParts = explode($this->tokens['child'], $path);
 
         $data = $this->data;
 
@@ -214,8 +225,7 @@ class Selector
      */
     private function getAll($path, $default=array())
     {
-        $orToken = '|';
-        $possiblePaths = explode($orToken, $path);
+        $possiblePaths = explode($this->tokens['or'], $path);
 
         foreach ($possiblePaths as $possiblePath) {
             $result = $this->getAllFromPath($possiblePath);
@@ -236,7 +246,7 @@ class Selector
      */
     private function getAllFromPath($path)
     {
-        $pathParts = explode('.', $path);
+        $pathParts = explode($this->tokens['child'], $path);
         $results = array();
         $data = $this->data;
 
