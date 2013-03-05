@@ -17,10 +17,6 @@ class Selector
     private $tokens = array(
         'or'              => '|',
         'child'           => '.',
-        'dictionaryBegin' => '{',
-        'dictionaryEnd'   => '}',
-        'listBegin'       => '[',
-        'listEnd'         => ']',
     );
 
     /**
@@ -49,16 +45,15 @@ class Selector
     {
         $path = $this->clearPath($path);
 
-        switch ($this->askingFor($path)) {
-        case 'list':
+        if (preg_match('/^\[.*\]$/', $path)) {
             $default = $default === '' ? array() : $default;
 
             return $this->getList($path, $default);
-        case 'dictionary':
+        } elseif (preg_match('/^\{.*\}$/', $path)) {
             return $this->getDictionaryFromPath($path);
-        default:
-            return $this->getOne($path, $default);
         }
+
+        return $this->getOne($path, $default);
     }
 
     /**
@@ -77,29 +72,6 @@ class Selector
     }
 
     /**
-     * Find out what the user is asking for: list, dictionary or string.
-     *
-     * @param string $path Requested path
-     *
-     * @return string Possible values: list, dictionary, one (string)
-     */
-    private function askingFor($path)
-    {
-        $posFirstChar = 0;
-        $posLastChar = strlen($path) - 1;
-
-        if (strpos($path, $this->tokens['listBegin']) === $posFirstChar &&
-                strpos($path, $this->tokens['listEnd']) === $posLastChar) {
-            return 'list';
-        } elseif (strpos($path, $this->tokens['dictionaryBegin']) === $posFirstChar &&
-                strpos($path, $this->tokens['dictionaryEnd']) === $posLastChar) {
-            return 'dictionary';
-        }
-
-        return 'one';
-    }
-
-    /**
      * Return a list using path to find fields.
      *
      * @param string $path    Path to look for info
@@ -110,7 +82,7 @@ class Selector
     private function getList($path, $default)
     {
         // Strip off []
-        $path = preg_replace('/\[|\]/', '', $path);
+        $path = preg_replace('/(^\[)|(\]$)/', '', $path);
 
         return $this->getAll($path, $default);
     }
@@ -125,7 +97,7 @@ class Selector
     private function getDictionaryFromPath($path)
     {
         // Strip off {}
-        $path = preg_replace('/\{|\}/', '', $path);
+        $path = preg_replace('/(^\{)|(\}$)/', '', $path);
 
         list($keys, $values) = explode(':', $path);
 
@@ -301,11 +273,12 @@ class Selector
     private function getDictionary($keysPath, $valuesPath)
     {
         $keys = $this->getAll($keysPath);
-        $values = $this->getAll($valuesPath, array());
 
-        if ( ! $keys || !is_array($keys)) {
+        if (count($keys) === 0) {
             return array();
         }
+
+        $values = $this->getAll($valuesPath);
 
         $keysLen = count($keys);
         $valuesLen = count($values);
