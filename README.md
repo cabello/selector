@@ -4,13 +4,13 @@ Selector [![Build Status](https://secure.travis-ci.org/cabello/selector.png)](ht
 Problem
 -------
 
-Imagine that you have a `StdClass` instance full of attributes you want to retrieve. So you do something like this:
+Imagine that you have a `StdClass` (possibly created by a `json_decode`) instance full of attributes you want to retrieve. So you do something like this:
 
     $username = $photo->owner->username;
 
 What happens if *username* is undefined and/or *owner*?
 
-    $username = isset($photo->owner) && isset($photo->owner->username)
+    $username = isset($photo) && isset($photo->owner) && isset($photo->owner->username)
               ? $photo->owner->username
               : 'anonymous';
 
@@ -22,39 +22,22 @@ Solution
 Selector turns the horrible code above into this:
 
     $photoSelector = Selector($photo);
-    $username = $photoSelector('owner.username', 'anonymous');
+    $username = $photoSelector->getOne('owner.username', 'anonymous');
 
 You never have to worry again about checking if the `StdClass` have the properties you need, and as a plus you receive several ways of retrieving the info you need.
 
 Features
 --------
 
-### Get attribute
-
-    $default = 'not found';
-    $attribute = $selector('foo.bar.baz', $default);
-
-Is the same as `foo->bar->baz` but it checks if everything is set before going deep into the tree otherwise we would have an exception.
-
-### Or
-
-    $nameOrLastName = $selector('profile.name | profile.lastname')
-
-### List
-
-    $names = $selector('[ profile.name ]')
-
-### Hash
-
-    $nameAge = $selector('{ profile.name : profile.age }')
+Will be revisited soon.
 
 Developer
 ---------
 
 Assuming you have `composer.phar` installed, it's simple to contribute to `selector`, clone the repository and run:
 
-    cd selector
+    cd selector # your clone folder
     composer.phar install --dev
     vendor/bin/phpunit tests
 
-And you are ready to make new tests and contributions.
+And you are ready to make new tests and contributions. :octocat:
