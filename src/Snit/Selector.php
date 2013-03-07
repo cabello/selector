@@ -13,39 +13,6 @@ class Selector extends AbstractSelector
     );
 
     /**
-     * Return a list using path to find fields.
-     *
-     * @param string $path    Path to look for info
-     * @param string $default Default value if path not match
-     *
-     * @return array Found data
-     */
-    public function getList($path, $default=array())
-    {
-        // Strip off []
-        $path = preg_replace('/(^\[)|(\]$)/', '', $path);
-
-        return $this->getAll($path, $default);
-    }
-
-    /**
-     * Return a dictionary (array with string keys pointing to values).
-     *
-     * @param string $path Path to look for info
-     *
-     * @return array Found data with keys and values
-     */
-    public function getDictionaryFromPath($path)
-    {
-        // Strip off {}
-        $path = preg_replace('/(^\{)|(\}$)/', '', $path);
-
-        list($keys, $values) = explode(':', $path);
-
-        return $this->getDictionary($keys, $values);
-    }
-
-    /**
      * Return a single result found using path.
      *
      * @param string $path    Path to look for info
@@ -93,7 +60,7 @@ class Selector extends AbstractSelector
             $contextObjects,
             function ($item) use ($fieldPath, $value) {
                 $contextParser = new Selector($item);
-                $foundValues = $contextParser->getList($fieldPath);
+                $foundValues = $contextParser->getAll($fieldPath);
 
                 return in_array($value, $foundValues);
             }
@@ -135,7 +102,7 @@ class Selector extends AbstractSelector
      *
      * @return array|mixed Array of found items or default value otherwise
      */
-    private function getAll($path, $default=array())
+    public function getAll($path, $default=array())
     {
         $possiblePaths = explode($this->tokens['or'], $path);
 
@@ -211,7 +178,7 @@ class Selector extends AbstractSelector
      *
      * @return array Array with keys matching values
      */
-    private function getDictionary($keysPath, $valuesPath)
+    public function getDictionary($keysPath, $valuesPath)
     {
         $keys = $this->getAll($keysPath);
 

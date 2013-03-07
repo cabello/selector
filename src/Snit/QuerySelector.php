@@ -16,17 +16,15 @@ class QuerySelector extends AbstractSelector
     {
         $path = $this->clearPath($path);
 
-        $selector = new Selector($this->data);
-
         if (preg_match('/^\[.*\]$/', $path)) {
             $default = $default === '' ? array() : $default;
 
-            return $selector->getList($path, $default);
+            return $this->getList($path, $default);
         } elseif (preg_match('/^\{.*\}$/', $path)) {
-            return $selector->getDictionaryFromPath($path);
+            return $this->getDictionaryFromPath($path);
         }
 
-        return $selector->getOne($path, $default);
+        return $this->getOne($path, $default);
     }
 
     /**
@@ -42,5 +40,55 @@ class QuerySelector extends AbstractSelector
         $path = preg_replace('/\s+/', '', $path);
 
         return $path;
+    }
+
+    /**
+     * Return a list using path to find fields.
+     *
+     * @param string $path    Path to look for info
+     * @param string $default Default value if path not match
+     *
+     * @return array Found data
+     */
+    private function getList($path, $default=array())
+    {
+        // Strip off []
+        $path = preg_replace('/(^\[)|(\]$)/', '', $path);
+
+        $selector = new Selector($this->data);
+
+        return $selector->getAll($path, $default);
+    }
+
+    /**
+     * Return a dictionary (array with string keys pointing to values).
+     *
+     * @param string $path Path to look for info
+     *
+     * @return array Found data with keys and values
+     */
+    private function getDictionaryFromPath($path)
+    {
+        // Strip off {}
+        $path = preg_replace('/(^\{)|(\}$)/', '', $path);
+
+        list($keys, $values) = explode(':', $path);
+
+        $selector = new Selector($this->data);
+
+        return $selector->getDictionary($keys, $values);
+    }
+
+    /**
+     * [getOne description]
+     * @param  string $path    [description]
+     * @param  [type] $default [description]
+     * @return [type]          [description]
+     */
+    private function getOne($path, $default)
+    {
+        $selector = new Selector($this->data);
+
+        return $selector->getOne($path, $default);
     }
 }

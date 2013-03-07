@@ -61,7 +61,7 @@ class SelectorTest extends PHPUnit_Framework_TestCase
             '3' => 'Willian Watanabe',
             '2' => 'Rafael Martins'
        );
-        $result = $focusedSelector->getDictionaryFromPath('{id:name}');
+        $result = $focusedSelector->getDictionary('id', 'name');
         $this->assertEquals($expected, $result);
     }
 
