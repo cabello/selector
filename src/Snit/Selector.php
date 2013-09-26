@@ -8,8 +8,8 @@ namespace Snit;
 class Selector extends AbstractSelector
 {
     private $tokens = array(
-        'or'              => '|',
-        'child'           => '.',
+        'or'    => '|',
+        'child' => '.',
     );
 
     /**
@@ -60,7 +60,7 @@ class Selector extends AbstractSelector
             $contextObjects,
             function ($item) use ($fieldPath, $value) {
                 $contextParser = new Selector($item);
-                $foundValues = $contextParser->getAll($fieldPath);
+                $foundValues   = $contextParser->getAll($fieldPath);
 
                 return in_array($value, $foundValues);
             }
@@ -79,12 +79,12 @@ class Selector extends AbstractSelector
     public function focus($path)
     {
         $pathParts = explode($this->tokens['child'], $path);
-
-        $data = $this->data;
+        $data      = $this->data;
 
         foreach ($pathParts as $attribute) {
             if ( ! isset($data->$attribute)) {
                 $data = null;
+
                 break;
             }
 
@@ -108,6 +108,7 @@ class Selector extends AbstractSelector
 
         foreach ($possiblePaths as $possiblePath) {
             $result = $this->getAllFromPath($possiblePath);
+
             if ($result !== false) {
                 return $result;
             }
@@ -126,11 +127,14 @@ class Selector extends AbstractSelector
     private function getAllFromPath($path)
     {
         $pathParts = explode($this->tokens['child'], $path);
-        $results = array();
-        $data = $this->data;
+        $results   = array();
+        $data      = $this->data;
 
         foreach ($pathParts as $attribute) {
-            if ( ! $data) break;
+            if ( ! $data) {
+                break;
+            }
+
             $results = $data = $this->getAllWithAttribute($data, $attribute);
         }
 
@@ -147,16 +151,17 @@ class Selector extends AbstractSelector
      */
     private function getAllWithAttribute($data, $attribute)
     {
-        $data = $this->isList($data) ? $data : array($data);
+        $data    = $this->isList($data) ? $data : array($data);
         $results = array();
-
-        $self = $this;
+        $self    = $this;
 
         array_map(
             function ($item) use (&$results, $attribute, $self) {
                 $item = (object) $item;
 
-                if ( ! isset($item->$attribute)) return;
+                if ( ! isset($item->$attribute)) {
+                    return;
+                }
 
                 if ($self->isList($item->$attribute)) {
                     $results = array_merge(array_values($item->$attribute), $results);
@@ -188,7 +193,7 @@ class Selector extends AbstractSelector
 
         $values = $this->getAll($valuesPath);
 
-        $keysLen = count($keys);
+        $keysLen   = count($keys);
         $valuesLen = count($values);
 
         if ($keysLen > $valuesLen) {
@@ -213,7 +218,7 @@ class Selector extends AbstractSelector
             return false;
         }
 
-        $keys = array_keys($data);
+        $keys       = array_keys($data);
         $stringKeys = array_filter($keys, 'is_string');
 
         return empty($stringKeys);
