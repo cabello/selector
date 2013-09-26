@@ -34,10 +34,10 @@ Will be revisited soon.
 Developer
 ---------
 
-Assuming you have `composer.phar` installed, it's simple to contribute to `selector`, clone the repository and run:
+Assuming you have `composer.phar` installed, it's simple to contribute to `selector`, fork, clone your repository and run:
 
     cd selector # your clone folder
     composer.phar install --dev
     vendor/bin/phpunit tests
 
-And you are ready to make new tests and contributions. :octocat:
+And you are ready to write new tests, contributions and sending pull requests. :octocat:
