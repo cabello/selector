@@ -29,7 +29,51 @@ You never have to worry again about checking if the `StdClass` have the properti
 Features
 --------
 
-Will be revisited soon.
+### Selector
+
+#### getOne
+
+#### Description
+#### Parameters
+#### Return Values
+#### Examples
+##### Example #1
+The above example will output:
+##### Example #2
+The above example will output:
+
+#### getAll
+
+#### Description
+#### Parameters
+#### Return Values
+#### Examples
+##### Example #1
+The above example will output:
+##### Example #2
+The above example will output:
+
+#### findOne
+
+#### Description
+#### Parameters
+#### Return Values
+#### Examples
+##### Example #1
+The above example will output:
+##### Example #2
+The above example will output:
+
+#### findAll
+
+#### Description
+#### Parameters
+#### Return Values
+#### Examples
+##### Example #1
+The above example will output:
+##### Example #2
+The above example will output:
 
 Developer
 ---------
