@@ -22,9 +22,9 @@ Solution
 Selector turns the horrible code above into this:
 
     $photoSelector = Selector($photo);
-    $username = $photoSelector->getOne('owner.username', 'anonymous');
+    $username      = $photoSelector->getOne('owner.username', 'anonymous');
 
-You never have to worry again about checking if the `StdClass` have the properties you need, and as a plus you receive several ways of retrieving the info you need.
+You never have to worry again about checking if the `StdClass` have the properties you need, and as a plus you receive several ways of retrieving data.
 
 Features
 --------
