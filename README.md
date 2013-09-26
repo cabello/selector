@@ -31,7 +31,7 @@ Features
 
 ### Selector
 
-#### getOne
+#### Selector::getOne
 
 #### Description
 #### Parameters
@@ -42,7 +42,7 @@ The above example will output:
 ##### Example #2
 The above example will output:
 
-#### getAll
+#### Selector::getAll
 
 #### Description
 #### Parameters
@@ -53,7 +53,7 @@ The above example will output:
 ##### Example #2
 The above example will output:
 
-#### findOne
+#### Selector::findOne
 
 #### Description
 #### Parameters
@@ -64,7 +64,18 @@ The above example will output:
 ##### Example #2
 The above example will output:
 
-#### findAll
+#### Selector::findAll
+
+#### Description
+#### Parameters
+#### Return Values
+#### Examples
+##### Example #1
+The above example will output:
+##### Example #2
+The above example will output:
+
+#### Selector::getDictionary
 
 #### Description
 #### Parameters
@@ -78,7 +89,7 @@ The above example will output:
 Developer
 ---------
 
-Assuming you have `composer.phar` installed, it's simple to contribute to `selector`, fork, clone your repository and run:
+Assuming you have `composer.phar` installed, it's simple to contribute to Selector, fork, clone your repository and run:
 
     cd selector # your clone folder
     composer.phar install --dev
