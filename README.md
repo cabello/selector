@@ -1,6 +1,11 @@
 Selector [![Build Status](https://secure.travis-ci.org/cabello/selector.png)](http://travis-ci.org/cabello/selector)
 =========
 
+Disclaimer
+----------
+
+If you found this project but think it's incomplete or doesn't meet your needs, try [Property Access](http://symfony.com/doc/current/components/property_access/index.html).
+
 Problem
 -------
 
